@@ -12,7 +12,7 @@
       background-color: rgb(0, 70, 50);
       color: white;
       margin: 0;
-      padding: 2.0em;
+      padding: 2em;
       text-align: center;
     }
 
@@ -33,7 +33,7 @@
 
     button {
       padding: 0.8em 1.5em;
-      font-size: 1.0em;
+      font-size: 1em;
       font-family: 'Segoe UI', sans-serif;
       border: none;
       background-color: #be8406;
@@ -48,14 +48,14 @@
     }
 
     #status {
-      margin-top: 1.0em;
-      font-size: 1.2em;
+      margin-top: 1em;
+      font-size: 1.1em;
       font-weight: bold;
     }
 
     #loading {
       display: none;
-      margin-top: 0.1em;
+      margin-top: 0.5em;
     }
 
     .loader {
@@ -68,15 +68,13 @@
       margin: 0.5em auto;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     #siswa-card {
       display: none;
       background: rgba(255, 255, 255, 0.1);
       padding: 1.5em;
-      margin-top: 0.5em;
+      margin-top: 0.8em;
       border-radius: 12px;
       max-width: 320px;
       margin-left: auto;
@@ -98,14 +96,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -139,10 +131,10 @@
   <div id="status"></div>
 
   <div id="siswa-card">
-    <img id="foto" src="#" alt="Foto Siswa">
+    <img id="foto" src="assets/img/default.png" alt="Foto Siswa">
     <h3 id="nama">-</h3>
     <p><strong>Kelas:</strong> <span id="kelas">-</span></p>
-    <p><strong>Total Skor:</strong> <span id="total">-</span></p>
+    <p><strong>Total Skor:</strong> <span id="total">0</span></p>
   </div>
 
   <audio id="successSound" src="assets/sound/success.mp3" preload="auto"></audio>
@@ -150,7 +142,7 @@
   <audio id="pleaseWaitSound" src="assets/sound/pleasewait.mp3" preload="auto"></audio>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec"; // 🔧 GANTI DENGAN SCRIPT URL-MU
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec";
 
     const statusDiv = document.getElementById("status");
     const loader = document.getElementById("loading");
@@ -158,6 +150,12 @@
     const successSound = document.getElementById("successSound");
     const notFoundSound = document.getElementById("notFoundSound");
     const pleaseWaitSound = document.getElementById("pleaseWaitSound");
+
+    // Simpan pilihan terakhir
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("poin").value = localStorage.getItem("poin") || "";
+      document.getElementById("game").value = localStorage.getItem("game") || "";
+    });
 
     function startScan() {
       const poin = document.getElementById("poin").value;
@@ -168,19 +166,32 @@
         return;
       }
 
+      // Simpan pilihan
+      localStorage.setItem("poin", poin);
+      localStorage.setItem("game", game);
+
       if ("NDEFReader" in window) {
         const reader = new NDEFReader();
         reader.scan().then(() => {
           statusDiv.textContent = "Tempelkan kartu NFC...";
           loader.style.display = "block";
+          pleaseWaitSound.pause();
+          pleaseWaitSound.currentTime = 0;
           pleaseWaitSound.play();
 
           reader.onreading = (event) => {
-            const uid = event.serialNumber.replace(/:/g, "").toUpperCase();
+            const uid = (event.serialNumber || "").replace(/:/g, "").toUpperCase();
+            if (!uid) {
+              loader.style.display = "none";
+              statusDiv.textContent = "Gagal membaca kartu, coba lagi.";
+              notFoundSound.play();
+              return;
+            }
             tambahPoin(uid, game, poin);
           };
         }).catch(err => {
           statusDiv.textContent = "Gagal memulai NFC: " + err;
+          loader.style.display = "none";
         });
       } else {
         alert("Browser tidak mendukung Web NFC (gunakan Chrome Android)");
@@ -188,6 +199,9 @@
     }
 
     function tambahPoin(uid, game, poin) {
+      loader.style.display = "block";
+      statusDiv.textContent = `Menambahkan ${poin} poin untuk ${game.toUpperCase()}...`;
+
       const formData = new URLSearchParams();
       formData.append("id_kartu", uid);
       formData.append("game", game);
@@ -200,18 +214,20 @@
       })
         .then(res => res.text())
         .then(result => {
-          statusDiv.textContent = result;
           loader.style.display = "none";
           if (result.includes("ditambahkan")) {
+            statusDiv.textContent = `✅ ${poin} poin berhasil ditambahkan!`;
             successSound.play();
             fetchData(uid);
           } else {
+            statusDiv.textContent = "❌ " + result;
             notFoundSound.play();
           }
         })
         .catch(err => {
-          statusDiv.textContent = "Koneksi error: " + err;
           loader.style.display = "none";
+          statusDiv.textContent = "Koneksi error: " + err;
+          notFoundSound.play();
         });
     }
 
@@ -219,15 +235,22 @@
       fetch(`${scriptURL}?id_kartu=${uid}`)
         .then(res => res.json())
         .then(data => {
+          if (data.error) {
+            card.style.display = "none";
+            statusDiv.textContent = "❌ ID tidak ditemukan di data.";
+            notFoundSound.play();
+            return;
+          }
           card.style.display = "block";
           document.getElementById("nama").textContent = data.nama || "-";
           document.getElementById("kelas").textContent = data.kelas || "-";
-          document.getElementById("foto").src = data.foto || "";
+          document.getElementById("foto").src = data.foto || "assets/img/default.png";
           document.getElementById("total").textContent = data.total || "0";
         })
         .catch(() => {
-          notFoundSound.play();
           card.style.display = "none";
+          statusDiv.textContent = "❌ Gagal mengambil data siswa.";
+          notFoundSound.play();
         });
     }
   </script>
