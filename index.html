@@ -1,88 +1,289 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game After Lunch - Poin</title>
-<style>
-  body { font-family: Poppins, sans-serif; background: #f0f4f8; padding: 20px; }
-  .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
-  select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: 1px solid #ccc; }
-  button { background: #007BFF; color: white; border: none; cursor: pointer; }
-  button:hover { background: #0056b3; }
-  .status { margin-top: 15px; font-weight: bold; text-align: center; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEKOLAH TMI ATTENDANCE FORM</title>
+  <link rel="icon" type="image/png" href="assets\img\logo_gold.png"/>
+
+    <script src="../../bootstrap-5.3.8-dist\js\color-modes.js"></script>
+    <link
+      href="../../bootstrap-5.3.8-dist\css\bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+  <link href="css/base.css" rel="stylesheet"/>
 </head>
+
 <body>
-<div class="card">
-  <h2>🏆 Tambah Poin Game</h2>
-  <label>Pilih Poin:</label>
-  <select id="poin">
-    <option value="">-- Pilih Poin --</option>
-    <option value="1">1 Poin</option>
-    <option value="3">3 Poin</option>
-    <option value="5">5 Poin</option>
-    <option value="10">10 Poin</option>
-  </select>
+  <!-- Tambahkan ini di atas <body> di setiap halaman selain index.html -->
+  <!-- <script>
+    if (localStorage.getItem("isLogin") !== "true") {
+      window.location.href = "index.html";
+    }
+  </script> -->
 
-  <label>Pilih Game:</label>
-  <select id="game">
-    <option value="">-- Pilih Game --</option>
-    <option value="uno">UNO</option>
-    <option value="catur">Catur</option>
-    <option value="jenga">Jenga</option>
-    <option value="tepok_nyamuk">Tepok Nyamuk</option>
-  </select>
-
-  <button id="scanBtn">📱 Scan Kartu NFC</button>
-  <div class="status" id="status">Menunggu aksi...</div>
+    <!-- Header Admin -->
+<div class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#"></a>
+    <button id="adminBtn" onclick="location.href='dashboard/dashboard.php'" class="btn ms-2" style="background-color:#be8406">Admin</button>
+    
+  </div>
 </div>
 
-<script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec";
+<div class="pt-5">
+  <h1>ATTENDANCE FORM</h1>
+  <p>Tap the button below, then attach the NFC card or scan QR code.</p>
+  
+  <button onclick="startScan()">SCAN NFC</button>
+  <button onclick="startQRScan()">SCAN QR CODE</button>
+  </div>
 
-document.getElementById("scanBtn").addEventListener("click", async () => {
-  const poin = document.getElementById("poin").value;
-  const game = document.getElementById("game").value;
-  const statusDiv = document.getElementById("status");
+  <div id="status"> </div>
+  <div id="loading">
+    <div class="loader"></div>
+  </div>
 
-  if (!poin || !game) {
-    statusDiv.textContent = "⚠️ Pilih poin dan game terlebih dahulu!";
-    return;
-  }
+  <div id="siswa-card">
+    <img id="foto" src="#" alt="Foto Siswa">
+    <p><strong>Name:</strong> <span id="nama">-</span></p>
+    <p><strong>NIS/NIP:</strong> <span id="nis">-</span></p>
+    <p><strong>Grade/Job:</strong> <span id="kelas">-</span></p>
+    <p><strong>Status:</strong> <span id="tipe">-</span></p>
+  </div>
 
-  if (!("NDEFReader" in window)) {
-    statusDiv.textContent = "❌ Browser ini tidak mendukung NFC.";
-    return;
-  }
+  <pre id="responseText"> </pre>
+  <audio id="successSound" src="assets/sound/success.mp3" preload="auto"></audio>
+  <audio id="duplikatSound" src="assets/sound/duplikat.mp3" preload="auto"></audio>
+  <audio id="notFoundSound" src="assets/sound/notfound.mp3" preload="auto"></audio>
+  <audio id="pleaseWaitSound" src="assets/sound/pleasewait.mp3" preload="auto"></audio>
+  <audio id="telattSound" src="assets/sound/lated.mp3" preload="auto"></audio>
 
-  try {
-    const ndef = new NDEFReader();
-    await ndef.scan();
-    statusDiv.textContent = "📡 Tempelkan kartu...";
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <div id="reader" style="width:300px; margin: auto; display:none;"></div>
 
-    ndef.onreading = async event => {
-      const uid = event.serialNumber.toUpperCase();
-      statusDiv.textContent = `🔍 Membaca kartu ${uid}...`;
+
+
+  <script>
+    let html5QrCode = null;
+    let qrActive = false;
+    let nfcActive = false;
+    let nfcCooldown = false;
+
+    const statusDiv = document.getElementById("status");
+    const loader = document.getElementById("loading");
+    const responseBox = document.getElementById("responseText");
+    const card = document.getElementById("siswa-card");
+    const successSound = document.getElementById("successSound");
+    const duplikatSound = document.getElementById("duplikatSound");
+    const notFoundSound = document.getElementById("notFoundSound");
+    const pleaseWaitSound = document.getElementById("pleaseWaitSound");
+    const telattSound = document.getElementById("telattSound");
+    const readerDiv = document.getElementById("reader");
+
+
+    // KIRIM DATA DARI SHEET KE SINI
+    function sendPost(uid) {
+      const now = new Date();
+      const tanggal = now.toLocaleDateString('en-CA');
+      const jam = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
       const formData = new URLSearchParams();
       formData.append("id_kartu", uid);
-      formData.append("game", game);
-      formData.append("poin", poin);
+      formData.append("tanggal", tanggal);
+      formData.append("jam", jam);
 
-      const res = await fetch(scriptURL, {
+      fetch("https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: formData
-      });
+        body: formData,
+      })
+        .then(res => res.text())
+        .then(result => {
+          responseBox.textContent = result;
 
-      const text = await res.text();
-      statusDiv.textContent = text;
-    };
-  } catch (err) {
-    statusDiv.textContent = "❌ Gagal memulai NFC: " + err.message;
-  }
-});
-</script>
+          // 🔥 Tambahkan KETERANGAN ABSEN ke UI
+          const infoEl = document.getElementById("info-keterangan-absen");
+          const trimmed = result.trim().toUpperCase();
+          if (trimmed.includes("MASUK") || trimmed.includes("PULANG")) { //INI BERDASARKAN "TEKS" APA YANG DISIMPAN KETIKA MELAKUKAN ABSENSI
+            infoEl.textContent = trimmed;
+            duplikatSound.play();
+          } else if (trimmed.includes("TERLAMBAT")) {
+            infoEl.textContent = trimmed;
+            // telattSound.play();
+          } else {
+            infoEl.textContent = trimmed;
+            successSound.play();
+          }
+        })
+
+        .catch(err => {
+          responseBox.textContent = "Error: " + err;
+          document.getElementById("info-keterangan-absen").textContent = "Gagal koneksi server";
+        });
+    }
+
+
+    //AMBIL DATA DARI SHEET
+    function fetchData(uid) {
+      fetch("https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec?id_kartu=" + uid)
+        .then(res => res.json())
+        .then(data => {
+          loader.style.display = "none";
+          document.getElementById("nama").textContent = data.nama || "-";
+          document.getElementById("nis").textContent = data.nis || "-";
+          document.getElementById("kelas").textContent = data.kelas || "-";
+          document.getElementById("tipe").textContent = data.tipe || "-";
+          document.getElementById("foto").src = data.foto || "";
+          card.style.display = "block";
+          setTimeout(() => {
+            card.style.display = "none";
+            responseBox.textContent = " ";
+            statusDiv.textContent = "Waiting for the card tap...";
+          }, 5000);
+        })
+        .catch(() => {
+          loader.style.display = "none";
+          notFoundSound.play();
+          responseBox.textContent += "\nData was not found.";
+        });
+
+    }
+
+
+    function stopQRScan() {
+      if (html5QrCode && qrActive) {
+        html5QrCode.stop().then(() => {
+          html5QrCode.clear();
+          html5QrCode = null;
+          readerDiv.style.display = "none";
+          qrActive = false;
+          console.log("QR Scanner stopped.");
+        }).catch(err => {
+          console.error("Gagal stop QR:", err);
+        });
+      }
+    }
+
+    function stopNFCScan() {
+      // Belum ada cara native stop NFC karena Web NFC auto-stop setelah tap
+      // Tapi kita bisa set flag:
+      nfcActive = false;
+      console.log("NFC Scanner flag reset.");
+    }
+
+
+    function startScan() {
+      stopQRScan(); // 🔒 stop QR dulu
+
+      if ("NDEFReader" in window) {
+        const reader = new NDEFReader();
+        reader.scan().then(() => {
+          nfcActive = true;
+          statusDiv.textContent = "Waiting for the card tap...";
+          loader.style.display = "block";
+          //AGAR BISA DISABLE NFC TERLEBIH DAHULU BIAR GA BENTROK SAMA QRCODE
+          reader.onreading = (event) => {
+            if (qrActive) {
+              console.warn("NFC diblok karena QR sedang aktif");
+              statusDiv.textContent = "NFC diblok: QR sedang aktif";
+              return;
+            }
+            if (nfcCooldown) {
+              console.warn("NFC sedang cooldown. Abaikan pembacaan ulang.");
+              return;
+            }
+
+            nfcCooldown = true; // ⛔ Aktifkan cooldown
+            setTimeout(() => {
+              nfcCooldown = false; // 🔓 Setelah 5 detik boleh baca lagi
+            }, 5000); // ⏱️ Atur durasi cooldown di sini
+
+            const uid = event.serialNumber.replace(/:/g, "").toUpperCase();
+            statusDiv.textContent = "UID: " + uid;
+            pleaseWaitSound.play();
+            sendPost(uid);
+            fetchData(uid);
+          };
+          //======================================================
+        }).catch(err => {
+          statusDiv.textContent = "Failed to start NFC: " + err;
+        });
+      } else {
+        statusDiv.textContent = "Browser does not support Web NFC API";
+      }
+    }
+
+
+    function startQRScan() {
+      if (nfcActive) {
+        stopNFCScan(); // anti-bentrok
+      }
+      stopQRScan(); // bersih-bersih dulu
+
+      readerDiv.style.display = "block";
+      html5QrCode = new Html5Qrcode("reader");
+      qrActive = true;
+
+      Html5Qrcode.getCameras().then(cameras => {
+        if (cameras && cameras.length) {
+          html5QrCode.start(
+            { facingMode: "user" },
+            { fps: 10, qrbox: 200 },
+            qrCodeMessage => {
+              html5QrCode.stop();
+              qrActive = false;
+              html5QrCode = null;
+              readerDiv.style.display = "none";
+              const uid = qrCodeMessage.trim().toUpperCase();
+              statusDiv.textContent = "QR: " + uid;
+              pleaseWaitSound.play();
+              sendPost(uid);
+              fetchData(uid);
+            },
+            errorMessage => {
+              statusDiv.textContent = "Scanning...";
+            }
+          );
+        }
+      }).catch(err => {
+        readerDiv.innerHTML = "Camera error: " + err;
+      });
+    }
+
+  </script>
+
+
+
+  <div id="info-keterangan-absen"
+    style="font-size: 0.2em; font-weight: bold; margin-top: 0.5em; color: rgb(0, 70, 50);"></div>
+  <div id="keterangan" style="font-size: 1.1em; font-weight: bold; margin-top: 0.2em; color: #eeaf28;"></div>
+  <div id="waktuTgl"></div>
+  <div id="waktuJam" style="font-size: 2.0em; font-weight: bold;"></div>
+
+  <script>
+    function tampilkanWaktu() {
+      const waktuTglDiv = document.getElementById("waktuTgl");
+      const waktuJamDiv = document.getElementById("waktuJam");
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const tanggal = now.toLocaleDateString('id-ID', options);
+      const jam = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+      const jamAngka = now.getHours();
+
+      const keterangan = (jamAngka >= 5 && jamAngka < 16) ? "MASUK" : "PULANG";
+      document.getElementById("keterangan").textContent = `${keterangan}`;
+      // const teks = result.trim().toUpperCase();
+      // document.getElementById("keterangan").textContent = teks;
+
+      waktuTglDiv.innerHTML = `${tanggal}`;
+      waktuJamDiv.innerHTML = `${jam} WIB`;
+    }
+    setInterval(tampilkanWaktu, 1000);
+    tampilkanWaktu();
+  </script>
 </body>
+
+
 </html>
