@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,61 +10,106 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: rgb(0, 70, 50);
+      background: linear-gradient(135deg, #004632, #00805c);
       color: white;
       margin: 0;
-      padding: 2em;
+      padding: 1em;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 2.5em 3em;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
       text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .logo {
+      width: 110px;
+      margin-bottom: 1em;
     }
 
     h1 {
+      font-weight: 700;
+      letter-spacing: 1px;
       text-transform: uppercase;
+      color: #d4b47e;
       margin-bottom: 0.4em;
     }
 
-    select, button {
-      font-size: 1em;
-      border: none;
+    p {
+      font-size: 0.95em;
+      color: #eee;
+    }
+
+    .row-select {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.2em 0;
+      text-align: left;
+    }
+
+    .row-select label {
+      flex: 1;
+      text-align: left;
+      font-weight: bold;
+      font-size: 1.05em;
+    }
+
+    .row-select select {
+      flex: 0 0 auto;
+      width: 160px;
+      text-align: center;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid #FFD700;
       border-radius: 8px;
-      padding: 0.6em 1.2em;
-      margin: 0.4em;
+      padding: 0.5em;
+      transition: 0.3s;
+    }
+
+    .row-select select:hover, .row-select select:focus {
+      background-color: rgba(255,255,255,0.2);
+      outline: none;
     }
 
     button {
-      background-color: #be8406;
+      background: linear-gradient(135deg, #be8406, #e6b34d);
       color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7em 2em;
+      font-weight: bold;
+      letter-spacing: 1px;
       cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
     }
 
     button:hover {
-      background-color: #016344;
-    }
-
-    .card-player {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.2em;
-      border-radius: 12px;
-      max-width: 320px;
-      margin: 1em auto;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
-    .card-player img {
-      width: 130px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 0.5em;
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #e6b34d, #be8406);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
     }
 
     @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
+      from {opacity: 0; transform: translateY(20px);}
       to {opacity: 1; transform: translateY(0);}
     }
 
     .loader {
       border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
+      border-top: 4px solid #FFD700;
       border-radius: 50%;
       width: 36px;
       height: 36px;
@@ -75,45 +120,61 @@
     @keyframes spin {
       to {transform: rotate(360deg);}
     }
+
+    .card-player {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 15px;
+      padding: 1em;
+      margin-top: 1.5em;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .card-player img {
+      width: 120px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 0.5em;
+    }
   </style>
 </head>
 
 <body>
-  <div class="container">
+  <div class="main-card">
+    <img src="assets/img/logo_gold.png" alt="Logo" class="logo">
     <h1>GAME AFTER LUNCH</h1>
-    <p>Pilih jumlah poin dan game, lalu tap kartu NFC untuk menambahkan skor.</p>
+    <p>Select the number of points and the game, then tap the NFC card to add the score.</p>
 
-    <div>
-      <label for="poin"><strong>Pilih Poin:</strong></label>
-      <select id="poin" class="form-select d-inline w-auto text-center">
-        <option value="1">1 Poin</option>
-        <option value="3">3 Poin</option>
-        <option value="5">5 Poin</option>
-        <option value="10">10 Poin</option>
+    <div class="row-select">
+      <label for="poin">Select Points:</label>
+      <select id="poin">
+        <option value="1">1 Point</option>
+        <option value="3">3 Points</option>
+        <option value="5">5 Points</option>
+        <option value="10">10 Points</option>
       </select>
     </div>
 
-    <div class="mt-3">
-      <label for="game"><strong>Pilih Game:</strong></label>
-      <select id="game" class="form-select d-inline w-auto text-center">
+    <div class="row-select">
+      <label for="game">Select Game:</label>
+      <select id="game">
         <option value="UNO">UNO</option>
-        <option value="CATUR">Catur</option>
+        <option value="CHESS">Chess</option>
         <option value="JENGA">Jenga</option>
-        <option value="TEPOK NYAMUK">Tepok Nyamuk</option>
+        <option value="TEPOK NYAMUK">Mosquito Slap</option>
       </select>
     </div>
 
-    <div class="mt-4">
-      <button onclick="startNFC()">SCAN NFC</button>
-    </div>
+    <button onclick="startNFC()">SCAN NFC</button>
 
     <div id="status" class="mt-3"></div>
     <div id="loading" style="display:none;"><div class="loader"></div></div>
 
     <div id="siswa-card" class="card-player" style="display:none;">
-      <img id="foto" src="#" alt="Foto Siswa">
-      <p><strong>Nama:</strong> <span id="nama">-</span></p>
-      <p><strong>Kelas:</strong> <span id="kelas">-</span></p>
+      <img id="foto" src="#" alt="Player Photo">
+      <p><strong>Name:</strong> <span id="nama">-</span></p>
+      <p><strong>Class:</strong> <span id="kelas">-</span></p>
       <p><strong>Total Score:</strong> <span id="total">-</span></p>
       <p><strong>Rank:</strong> <span id="rank">-</span></p>
       <p><strong>Badge:</strong> <span id="badge">-</span></p>
@@ -123,6 +184,9 @@
   <audio id="successSound" src="assets/sound/success.mp3" preload="auto"></audio>
   <audio id="notFoundSound" src="assets/sound/notfound.mp3" preload="auto"></audio>
   <audio id="pleaseWaitSound" src="assets/sound/pleasewait.mp3" preload="auto"></audio>
+</body>
+</html>
+
 
 <script>
   const GAS_URL = "https://script.google.com/macros/s/AKfycbwsJnIBnvFU5dffbLRFFH0_zpip7BGDvbJ5NKbOvxNpiqHp6yo4-1GL8lQtSgNHmbiG/exec";
@@ -162,19 +226,19 @@
 
   async function startNFC() {
     if (!("NDEFReader" in window)) {
-      statusDiv.textContent = "❌ Browser tidak mendukung Web NFC.";
+      statusDiv.textContent = "❌ Browser does not support Web NFC.";
       return;
     }
 
     if (isCooldown) {
-      statusDiv.textContent = "⏳ Tunggu sebentar sebelum scan lagi...";
+      statusDiv.textContent = "⏳ Please wait a moment before scanning again....";
       return;
     }
 
     const reader = new NDEFReader();
     try {
       await reader.scan();
-      statusDiv.textContent = "Tempelkan kartu NFC...";
+      statusDiv.textContent = "Tap the NFC card...";
       loader.style.display = "block";
 
       reader.onreading = async (event) => {
@@ -182,7 +246,7 @@
         isCooldown = true; // Aktifkan cooldown
 
         const uid = event.serialNumber.replace(/:/g, "").toUpperCase();
-        statusDiv.textContent = "Mendeteksi kartu...";
+        statusDiv.textContent = "Detecting NFC card, please wait...";
         pleaseWaitSound.play();
 
         try {
@@ -216,7 +280,7 @@
       };
 
     } catch (err) {
-      statusDiv.textContent = "❌ NFC gagal dijalankan: " + err;
+      statusDiv.textContent = "❌ Failed to execute NFC:" + err;
     }
   }
 </script>
