@@ -1,258 +1,88 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game Point Scanner</title>
-  <link rel="icon" type="image/png" href="assets/img/logo_gold.png" />
-
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: rgb(0, 70, 50);
-      color: white;
-      margin: 0;
-      padding: 2em;
-      text-align: center;
-    }
-
-    h2 {
-      text-transform: uppercase;
-      margin-bottom: 0.3em;
-      color: #ffc107;
-    }
-
-    select {
-      padding: 0.8em;
-      font-size: 1em;
-      border-radius: 8px;
-      border: none;
-      margin: 0.3em;
-      width: 220px;
-    }
-
-    button {
-      padding: 0.8em 1.5em;
-      font-size: 1em;
-      font-family: 'Segoe UI', sans-serif;
-      border: none;
-      background-color: #be8406;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 0.6em;
-    }
-
-    button:hover {
-      background-color: #016344;
-    }
-
-    #status {
-      margin-top: 1em;
-      font-size: 1.1em;
-      font-weight: bold;
-    }
-
-    #loading {
-      display: none;
-      margin-top: 0.5em;
-    }
-
-    .loader {
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 1s linear infinite;
-      margin: 0.5em auto;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    #siswa-card {
-      display: none;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.5em;
-      margin-top: 0.8em;
-      border-radius: 12px;
-      max-width: 320px;
-      margin-left: auto;
-      margin-right: auto;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
-    #siswa-card img {
-      width: 130px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-bottom: 0.5em;
-    }
-
-    #siswa-card p {
-      margin: 0.4em 0;
-      font-size: 0.9em;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game After Lunch - Poin</title>
+<style>
+  body { font-family: Poppins, sans-serif; background: #f0f4f8; padding: 20px; }
+  .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+  select, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: 1px solid #ccc; }
+  button { background: #007BFF; color: white; border: none; cursor: pointer; }
+  button:hover { background: #0056b3; }
+  .status { margin-top: 15px; font-weight: bold; text-align: center; }
+</style>
 </head>
-
 <body>
-  <h2>Game Point Scanner</h2>
-  <p>Pilih poin dan permainan, lalu tempelkan kartu NFC untuk menambahkan skor.</p>
+<div class="card">
+  <h2>🏆 Tambah Poin Game</h2>
+  <label>Pilih Poin:</label>
+  <select id="poin">
+    <option value="">-- Pilih Poin --</option>
+    <option value="1">1 Poin</option>
+    <option value="3">3 Poin</option>
+    <option value="5">5 Poin</option>
+    <option value="10">10 Poin</option>
+  </select>
 
-  <div>
-    <select id="poin">
-      <option value="">-- Pilih Poin --</option>
-      <option value="1">1 Poin</option>
-      <option value="3">3 Poin</option>
-      <option value="5">5 Poin</option>
-      <option value="10">10 Poin</option>
-    </select>
+  <label>Pilih Game:</label>
+  <select id="game">
+    <option value="">-- Pilih Game --</option>
+    <option value="uno">UNO</option>
+    <option value="catur">Catur</option>
+    <option value="jenga">Jenga</option>
+    <option value="tepok_nyamuk">Tepok Nyamuk</option>
+  </select>
 
-    <select id="game">
-      <option value="">-- Pilih Permainan --</option>
-      <option value="uno">UNO</option>
-      <option value="catur">Catur</option>
-      <option value="jenga">Jenga</option>
-      <option value="tepok_nyamuk">Tepok Nyamuk</option>
-    </select>
+  <button id="scanBtn">📱 Scan Kartu NFC</button>
+  <div class="status" id="status">Menunggu aksi...</div>
+</div>
 
-    <br />
-    <button onclick="startScan()">SCAN NFC</button>
-  </div>
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec";
 
-  <div id="loading"><div class="loader"></div></div>
-  <div id="status"></div>
+document.getElementById("scanBtn").addEventListener("click", async () => {
+  const poin = document.getElementById("poin").value;
+  const game = document.getElementById("game").value;
+  const statusDiv = document.getElementById("status");
 
-  <div id="siswa-card">
-    <img id="foto" src="assets/img/default.png" alt="Foto Siswa">
-    <h3 id="nama">-</h3>
-    <p><strong>Kelas:</strong> <span id="kelas">-</span></p>
-    <p><strong>Total Skor:</strong> <span id="total">0</span></p>
-  </div>
+  if (!poin || !game) {
+    statusDiv.textContent = "⚠️ Pilih poin dan game terlebih dahulu!";
+    return;
+  }
 
-  <audio id="successSound" src="assets/sound/success.mp3" preload="auto"></audio>
-  <audio id="notFoundSound" src="assets/sound/notfound.mp3" preload="auto"></audio>
-  <audio id="pleaseWaitSound" src="assets/sound/pleasewait.mp3" preload="auto"></audio>
+  if (!("NDEFReader" in window)) {
+    statusDiv.textContent = "❌ Browser ini tidak mendukung NFC.";
+    return;
+  }
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwQ9UoTq6FHsAKYgVZMLLom8uEUy9vSaSbDPOBvx4MKUVHUUNnYP91saUpHmp5LGf97/exec";
+  try {
+    const ndef = new NDEFReader();
+    await ndef.scan();
+    statusDiv.textContent = "📡 Tempelkan kartu...";
 
-    const statusDiv = document.getElementById("status");
-    const loader = document.getElementById("loading");
-    const card = document.getElementById("siswa-card");
-    const successSound = document.getElementById("successSound");
-    const notFoundSound = document.getElementById("notFoundSound");
-    const pleaseWaitSound = document.getElementById("pleaseWaitSound");
-
-    // Simpan pilihan terakhir
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("poin").value = localStorage.getItem("poin") || "";
-      document.getElementById("game").value = localStorage.getItem("game") || "";
-    });
-
-    function startScan() {
-      const poin = document.getElementById("poin").value;
-      const game = document.getElementById("game").value;
-
-      if (!poin || !game) {
-        alert("Pilih poin dan permainan terlebih dahulu!");
-        return;
-      }
-
-      // Simpan pilihan
-      localStorage.setItem("poin", poin);
-      localStorage.setItem("game", game);
-
-      if ("NDEFReader" in window) {
-        const reader = new NDEFReader();
-        reader.scan().then(() => {
-          statusDiv.textContent = "Tempelkan kartu NFC...";
-          loader.style.display = "block";
-          pleaseWaitSound.pause();
-          pleaseWaitSound.currentTime = 0;
-          pleaseWaitSound.play();
-
-          reader.onreading = (event) => {
-            const uid = (event.serialNumber || "").replace(/:/g, "").toUpperCase();
-            if (!uid) {
-              loader.style.display = "none";
-              statusDiv.textContent = "Gagal membaca kartu, coba lagi.";
-              notFoundSound.play();
-              return;
-            }
-            tambahPoin(uid, game, poin);
-          };
-        }).catch(err => {
-          statusDiv.textContent = "Gagal memulai NFC: " + err;
-          loader.style.display = "none";
-        });
-      } else {
-        alert("Browser tidak mendukung Web NFC (gunakan Chrome Android)");
-      }
-    }
-
-    function tambahPoin(uid, game, poin) {
-      loader.style.display = "block";
-      statusDiv.textContent = `Menambahkan ${poin} poin untuk ${game.toUpperCase()}...`;
+    ndef.onreading = async event => {
+      const uid = event.serialNumber.toUpperCase();
+      statusDiv.textContent = `🔍 Membaca kartu ${uid}...`;
 
       const formData = new URLSearchParams();
       formData.append("id_kartu", uid);
       formData.append("game", game);
       formData.append("poin", poin);
 
-      fetch(scriptURL, {
+      const res = await fetch(scriptURL, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: formData
-      })
-        .then(res => res.text())
-        .then(result => {
-          loader.style.display = "none";
-          if (result.includes("ditambahkan")) {
-            statusDiv.textContent = `✅ ${poin} poin berhasil ditambahkan!`;
-            successSound.play();
-            fetchData(uid);
-          } else {
-            statusDiv.textContent = "❌ " + result;
-            notFoundSound.play();
-          }
-        })
-        .catch(err => {
-          loader.style.display = "none";
-          statusDiv.textContent = "Koneksi error: " + err;
-          notFoundSound.play();
-        });
-    }
+      });
 
-    function fetchData(uid) {
-      fetch(`${scriptURL}?id_kartu=${uid}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) {
-            card.style.display = "none";
-            statusDiv.textContent = "❌ ID tidak ditemukan di data.";
-            notFoundSound.play();
-            return;
-          }
-          card.style.display = "block";
-          document.getElementById("nama").textContent = data.nama || "-";
-          document.getElementById("kelas").textContent = data.kelas || "-";
-          document.getElementById("foto").src = data.foto || "assets/img/default.png";
-          document.getElementById("total").textContent = data.total || "0";
-        })
-        .catch(() => {
-          card.style.display = "none";
-          statusDiv.textContent = "❌ Gagal mengambil data siswa.";
-          notFoundSound.play();
-        });
-    }
-  </script>
+      const text = await res.text();
+      statusDiv.textContent = text;
+    };
+  } catch (err) {
+    statusDiv.textContent = "❌ Gagal memulai NFC: " + err.message;
+  }
+});
+</script>
 </body>
 </html>
