@@ -1,0 +1,90 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(160deg, #004632, #00281f);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.form-signin {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 380px;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.7s ease;
+}
+
+.form-signin img {
+  display: block;
+  margin: 0 auto 1rem auto;
+}
+
+.form-floating > label {
+  color: #ccc;
+}
+
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: #be8406;
+  box-shadow: 0 0 0 0.25rem rgba(190, 132, 6, 0.25);
+}
+
+.btn-login {
+  background-color: #be8406;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+  border-radius: 8px;
+}
+
+.btn-login:hover {
+  background-color: #e2a735;
+  transform: translateY(-2px);
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transition: 0.3s;
+  border-radius: 8px;
+}
+
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#message {
+  margin-top: 0.8em;
+  font-size: 0.9em;
+}
+
+footer {
+  margin-top: 1.5rem;
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

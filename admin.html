@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAME AFTER LUNCH - POINT SYSTEM</title>
+  <link rel="icon" type="image/png" href="assets/img/logo_gold.png"/>
+  <link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #004632, #00805c);
+      color: white;
+      margin: 0;
+      padding: 1em;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 2.5em 3em;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .logo {
+      width: 110px;
+      margin-bottom: 1em;
+    }
+
+    h1 {
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #d4b47e;
+      margin-bottom: 0.4em;
+    }
+
+    p {
+      font-size: 0.95em;
+      color: #eee;
+    }
+
+    .row-select {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.2em 0;
+      text-align: left;
+    }
+
+    .row-select label {
+      flex: 1;
+      text-align: left;
+      font-weight: bold;
+      font-size: 1.05em;
+    }
+
+    .row-select select {
+      flex: 0 0 auto;
+      width: 160px;
+      text-align: center;
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid #FFD700;
+      border-radius: 8px;
+      padding: 0.5em;
+      transition: 0.3s;
+    }
+
+    .row-select select:hover, .row-select select:focus {
+      background-color: rgba(255,255,255,0.2);
+      outline: none;
+    }
+
+    button {
+      background: linear-gradient(135deg, #be8406, #e6b34d);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.7em 2em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #e6b34d, #be8406);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .loader {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #FFD700;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+      margin: 1em auto;
+    }
+
+    @keyframes spin {
+      to {transform: rotate(360deg);}
+    }
+
+    .card-player {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 15px;
+      padding: 1em;
+      margin-top: 1.5em;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .card-player img {
+      width: 120px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 0.5em;
+    }
+
+    .button-row {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  margin-top: 1em;
+  flex-wrap: wrap; /* biar bisa turun di mobile */
+}
+
+/* Untuk mobile, tombol tampil vertikal */
+@media (max-width: 480px) {
+  .button-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .button-row button {
+    width: 100%;
+  }
+}
+  </style>
+</head>
+
+<body>
+<script>
+// Cek status login saat halaman dimuat
+window.addEventListener("DOMContentLoaded", () => {
+  const isLogin = localStorage.getItem("isLogin");
+
+  if (isLogin !== "true") {
+    // Jika belum login, lempar ke halaman login
+    window.location.href = "login.html";
+  }
+});
+</script>
+
+
+  <div class="main-card">
+    <img src="assets/img/logo_gold.png" alt="Logo" class="logo">
+    <h1>GAME AFTER LUNCH</h1>
+    <p>Select the number of points and the game, then tap the NFC card to add the score.</p>
+
+    <div class="row-select">
+      <label for="poin">Select Points:</label>
+      <select id="poin">
+        <option value="1">1 Point</option>
+        <option value="3">3 Points</option>
+        <option value="5">5 Points</option>
+        <option value="10">10 Points</option>
+      </select>
+    </div>
+
+    <div class="row-select">
+      <label for="game">Select Game:</label>
+      <select id="game">
+        <option value="UNO">UNO</option>
+        <option value="CHESS">Chess</option>
+        <option value="JENGA">Jenga</option>
+        <option value="TEPOK NYAMUK">Mosquito Slap</option>
+      </select>
+    </div>
+
+  <div class="button-row">
+  <button onclick="startNFC()">Scan NFC</button>
+  <button onclick="leaderboard()">Leaderboard</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+
+    <div id="status" class="mt-3"></div>
+    <div id="loading" style="display:none;"><div class="loader"></div></div>
+
+    <div id="siswa-card" class="card-player" style="display:none;">
+      <img id="foto" src="#" alt="Player Photo">
+      <p><strong>Name:</strong> <span id="nama">-</span></p>
+      <p><strong>Class:</strong> <span id="kelas">-</span></p>
+      <p><strong>Total Score:</strong> <span id="total">-</span></p>
+      <p><strong>Rank:</strong> <span id="rank">-</span></p>
+      <p><strong>Badge:</strong> <span id="badge">-</span></p>
+    </div>
+  </div>
+
+  <audio id="successSound" src="assets/sound/success.mp3" preload="auto"></audio>
+  <audio id="notFoundSound" src="assets/sound/notfound.mp3" preload="auto"></audio>
+  <audio id="pleaseWaitSound" src="assets/sound/pleasewait.mp3" preload="auto"></audio>
+</body>
+</html>
+
+
+<script>
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwN7tLWg7cSqJeScydRjpJnyROGm_XLaueVQEkhwfTDwXdG06eYD4pSmtWxXBbaIJKA/exec";
+  const statusDiv = document.getElementById("status");
+  const loader = document.getElementById("loading");
+  const card = document.getElementById("siswa-card");
+  const successSound = document.getElementById("successSound");
+  const notFoundSound = document.getElementById("notFoundSound");
+  const pleaseWaitSound = document.getElementById("pleaseWaitSound");
+
+  let isCooldown = false; // ⏳ Status cooldown
+  const cooldownTime = 5000; // 5 detik
+
+  async function sendPoin(uid) {
+    const poin = document.getElementById("poin").value;
+    const game = document.getElementById("game").value;
+
+    const data = new URLSearchParams({
+      id_kartu: uid,
+      game: game,
+      poin: poin
+    });
+
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      body: data
+    });
+    return res.text();
+  }
+
+  async function fetchData(uid) {
+    const res = await fetch(`${GAS_URL}?id_kartu=${uid}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    return data;
+  }
+
+  async function startNFC() {
+    if (!("NDEFReader" in window)) {
+      statusDiv.textContent = "❌ Browser does not support Web NFC.";
+      return;
+    }
+
+    if (isCooldown) {
+      statusDiv.textContent = "⏳ Please wait a moment before scanning again....";
+      return;
+    }
+
+    const reader = new NDEFReader();
+    try {
+      await reader.scan();
+      statusDiv.textContent = "Tap the NFC card...";
+      loader.style.display = "block";
+
+      reader.onreading = async (event) => {
+        if (isCooldown) return; // Cegah double input
+        isCooldown = true; // Aktifkan cooldown
+
+        const uid = event.serialNumber.replace(/:/g, "").toUpperCase();
+        statusDiv.textContent = "Detecting NFC card, please wait...";
+        pleaseWaitSound.play();
+
+        try {
+          const hasil = await sendPoin(uid);
+          const data = await fetchData(uid);
+
+          loader.style.display = "none";
+          successSound.play();
+
+          document.getElementById("nama").textContent = data.nama || "-";
+          document.getElementById("kelas").textContent = data.kelas || "-";
+          document.getElementById("total").textContent = data.total || "0";
+          document.getElementById("rank").textContent = data.rank || "-";
+          document.getElementById("badge").textContent = data.badge || "-";
+          document.getElementById("foto").src = data.foto || "";
+          card.style.display = "block";
+
+          statusDiv.textContent = hasil;
+        } catch (err) {
+          loader.style.display = "none";
+          notFoundSound.play();
+          statusDiv.textContent = "❌ " + err.message;
+        }
+
+        // 🔒 Aktifkan cooldown
+        setTimeout(() => {
+          isCooldown = false;
+          statusDiv.textContent = "";
+          card.style.display = "none";
+        }, cooldownTime);
+      };
+
+    } catch (err) {
+      statusDiv.textContent = "❌ Failed to execute NFC:" + err;
+    }
+  }
+</script>
+
+<script>
+// Cek status login saat halaman dimuat
+window.addEventListener("DOMContentLoaded", () => {
+  const isLogin = localStorage.getItem("isLogin");
+  if (isLogin !== "true") {
+    window.location.href = "login.html";
+  }
+});
+
+// Fungsi logout
+function logout() {
+  localStorage.removeItem("isLogin"); // hapus status login
+  window.location.href = "login.html"; // lempar ke halaman login
+}
+
+function leaderboard() {
+  window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
