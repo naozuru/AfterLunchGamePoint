@@ -1,177 +1,413 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game After Lunch - Badge Gallery</title>
-<link rel="icon" type="image/png" href="assets/img/logo_gold.png"/>
-<link href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css" rel="stylesheet" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game After Lunch - Badge Gallery</title>
+    <link rel="icon" type="image/png" href="assets/img/logo_gold.png" />
+    <link
+      href="../../bootstrap-5.3.8-dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-<style>
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #004632, #00805c);
-  color: white;
-  margin: 0;
-  padding: 1em;
-  min-height: 100vh;
-}
+    <style>
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #004632, #00805c);
+        color: white;
+        margin: 0;
+        padding: 1em;
+        min-height: 100vh;
+      }
 
-.main-card {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 2em 3em;
-  backdrop-filter: blur(10px);
-  max-width: 900px;
-  margin: auto;
-  animation: fadeIn 0.6s ease-in-out;
-}
+      .main-card {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2em 3em;
+        backdrop-filter: blur(10px);
+        max-width: 900px;
+        margin: auto;
+        animation: fadeIn 0.6s ease-in-out;
+      }
 
-.logo {
-  width: 100px;
-  display: block;
-  margin: 0 auto 1em auto;
-}
+      .logo {
+        width: 100px;
+        display: block;
+        margin: 0 auto 1em auto;
+      }
 
-h1 {
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: #d4b47e;
-  text-align: center;
-  margin-bottom: 1em;
-}
+      h1 {
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #d4b47e;
+        text-align: center;
+        margin-bottom: 0.5em;
+      }
 
-.badge-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5em;
-}
+      .info-box {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 1em 1.5em;
+        color: #eee;
+        font-size: 0.9em;
+        text-align: justify;
+        margin-bottom: 2em;
+        line-height: 1.5em;
+        border-left: 4px solid #ffd700;
+      }
 
-.badge-card {
-  background: rgba(255,255,255,0.1);
-  border-radius: 15px;
-  padding: 1em;
-  text-align: center;
-  backdrop-filter: blur(5px);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
+      .badge-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5em;
+      }
 
-.badge-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-}
+      .badge-card {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1em;
+        text-align: center;
+        backdrop-filter: blur(5px);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
 
-.badge-card img {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 0.5em;
-}
+      .badge-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      }
 
-.badge-card h3 {
-  font-size: 1.05em;
-  margin-bottom: 0.3em;
-  color: #FFD700;
-}
+      .badge-card img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 0.5em;
+      }
 
-.badge-card p {
-  font-size: 0.85em;
-  color: #eee;
-}
+      .badge-card h3 {
+        font-size: 1.05em;
+        margin-bottom: 0.3em;
+        color: #ffd700;
+      }
 
-@keyframes fadeIn {
-  from {opacity: 0; transform: translateY(20px);}
-  to {opacity: 1; transform: translateY(0);}
-}
+      .badge-card p {
+        font-size: 0.85em;
+        color: #eee;
+        margin-bottom: 0.1em;
+      }
 
-@media (max-width: 480px) {
-  .main-card {
-    padding: 1.5em;
-  }
-}
-</style>
-</head>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-<body>
-<div class="main-card">
-    <div style="text-align:right; margin-bottom:1em;">
-  <button onclick="goBackLeaderboard()" style="
-    background: linear-gradient(135deg, #be8406, #e6b34d);
-    color:white;
-    border:none;
-    border-radius:10px;
-    padding:0.4em 1em;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow: 0 0 10px rgba(255,215,0,0.3);
-    transition:0.3s;
-  " 
-  onmouseover="this.style.transform='scale(1.05)'" 
-  onmouseout="this.style.transform='scale(1)'">
-    X
-  </button>
-</div>
+      @media (max-width: 480px) {
+        .main-card {
+          padding: 1.5em;
+        }
+      }
+    </style>
+  </head>
 
-  <img src="assets/img/logo_gold.png" alt="Logo" class="logo">
-  <h1>Badge Gallery</h1>
+  <body>
+    <div class="main-card">
+      <div style="text-align: right; margin-bottom: 1em">
+        <button
+          onclick="goBackLeaderboard()"
+          style="
+            background: linear-gradient(135deg, #be8406, #e6b34d);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.4em 1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+            transition: 0.3s;
+          "
+          onmouseover="this.style.transform='scale(1.05)'"
+          onmouseout="this.style.transform='scale(1)'"
+        >
+          X
+        </button>
+      </div>
 
-  <div class="badge-grid" id="badgeGrid"></div>
-</div>
+      <img src="assets/img/logo_gold.png" alt="Logo" class="logo" />
+      <h1>Badge Gallery</h1>
 
-<script>
-const badges = [
-  // UNO
-  {name:"Quick Draw", game:"UNO", icon:"assets/badge/uno1.png", desc:"Awali perjalananmu di dunia UNO. Cepat dan tepat untuk menang."},
-  {name:"Card Master", game:"UNO", icon:"assets/badge/uno2.png", desc:"Menguasai seni strategi kartu. Selalu selangkah lebih maju."},
-  {name:"Deck Dominator", game:"UNO", icon:"assets/badge/uno3.png", desc:"Dominasi setiap permainan dengan kombinasi kartu sempurna."},
-  {name:"UNO Legend", game:"UNO", icon:"assets/badge/uno4.png", desc:"Legenda UNO sejati, dikenal karena taktik dan keberanian."},
-  {name:"Ultimate Trickster", game:"UNO", icon:"assets/badge/uno5.png", desc:"Master dari jebakan kartu. Lawan selalu terkejut."},
-  {name:"Grandmaster of UNO", game:"UNO", icon:"assets/badge/uno6.png", desc:"Puncak prestasi UNO, tak ada yang bisa menandingi."},
+      <div class="info-box">
+        <p>
+          Welcome to the <strong>Badge Gallery</strong> a showcase of your
+          gaming milestones! Each badge represents your achievements and
+          dedication across different games in the
+          <strong>Game After Lunch</strong> challenge. As you earn more points
+          in each game, you'll unlock higher-tier badges from beginner titles to
+          legendary honors.
+        </p>
+        <p>
+          🏆 <strong>How to earn badges:</strong><br />
+          Gain points by participating and winning in each game.
+        </p>
 
-  // Chess
-  {name:"Pawn Starter", game:"Chess", icon:"assets/badge/chess1.png", desc:"Setiap grandmaster dimulai dari pion. Kamu memulai perjalanan."},
-  {name:"Knight Tactician", game:"Chess", icon:"assets/badge/chess2.png", desc:"Kuda strategis, selalu menaklukkan lawan dengan trik licik."},
-  {name:"Rook Strategist", game:"Chess", icon:"assets/badge/chess3.png", desc:"Raja benteng strategi, pertahanan dan serangan seimbang."},
-  {name:"Queen’s Gambit", game:"Chess", icon:"assets/badge/chess4.png", desc:"Langkah berani ala ratu. Serangan mematikan dan elegan."},
-  {name:"King Slayer", game:"Chess", icon:"assets/badge/chess5.png", desc:"Si pembunuh raja, menyelesaikan permainan dengan gemilang."},
-  {name:"Chess Grandmaster", game:"Chess", icon:"assets/badge/chess6.png", desc:"Prestasi tertinggi di papan catur. Semua mengagumi."},
+        <ul>
+          <li>10+ points → Bronze-tier badges (Rookie level)</li>
+          <li>20+ points → Silver-tier badges (Pro level)</li>
+          <li>35+ points → Gold-tier badges (Elite level)</li>
+          <li>55+ points → Platinum-tier badges (Champion level)</li>
+          <li>75+ points → Diamond-tier badges (Legend level)</li>
+          <li>100+ points → Ultimate-tier badges (Mythic level)</li>
+        </ul>
+      </div>
 
-  // Jenga
-  {name:"Steady Hands", game:"Jenga", icon:"assets/badge/jenga1.png", desc:"Tanganmu stabil, menahan blok pertama dengan penuh perhatian."},
-  {name:"Block Builder", game:"Jenga", icon:"assets/badge/jenga2.png", desc:"Membangun menara tinggi dengan ketelitian dan kesabaran."},
-  {name:"Tower Architect", game:"Jenga", icon:"assets/badge/jenga3.png", desc:"Ahli arsitektur blok, menara berdiri kokoh."},
-  {name:"Balance Master", game:"Jenga", icon:"assets/badge/jenga4.png", desc:"Menguasai keseimbangan. Tiap blok jatuh, tapi menara bertahan."},
-  {name:"Stacking Genius", game:"Jenga", icon:"assets/badge/jenga5.png", desc:"Jenius menumpuk blok. Menara mencapai langit."},
-  {name:"Jenga Legend", game:"Jenga", icon:"assets/badge/jenga6.png", desc:"Legenda Jenga sejati. Tantangan tinggi? Tak masalah."},
+      <div class="badge-grid" id="badgeGrid"></div>
+    </div>
 
-  // Mosquito
-  {name:"Quick Reflex", game:"Mosquito", icon:"assets/badge/mosquito1.png", desc:"Refleks cepat membasmi nyamuk pertama."},
-  {name:"Mosquito Hunter", game:"Mosquito", icon:"assets/badge/mosquito2.png", desc:"Pemburu nyamuk ulung, jarang ada yang lolos."},
-  {name:"Slap Expert", game:"Mosquito", icon:"assets/badge/mosquito3.png", desc:"Ahli menepuk nyamuk. Cepat, tepat, tanpa ampun."},
-  {name:"Insect Terminator", game:"Mosquito", icon:"assets/badge/mosquito4.png", desc:"Pemusnah serangga sejati. Nyamuk gentar melihatmu."},
-  {name:"Bug Obliterator", game:"Mosquito", icon:"assets/badge/mosquito5.png", desc:"Menghapus semua bug dari permukaan arena."},
-  {name:"Mosquito Slayer", game:"Mosquito", icon:"assets/badge/mosquito6.png", desc:"Si pembunuh nyamuk legendaris. Tidak ada yang tersisa."}
-];
+    <script>
+      const badges = [
+        // UNO
+        {
+          name: "Quick Draw",
+          game: "UNO",
+          tier: "Bronze",
+          icon: "assets/badge/uno1.png",
+          desc: "Begin your UNO journey. Be quick and smart to win.",
+        },
+        {
+          name: "Card Master",
+          game: "UNO",
+          tier: "Silver",
+          icon: "assets/badge/uno2.png",
+          desc: "A true strategist, always one move ahead.",
+        },
+        {
+          name: "Deck Dominator",
+          game: "UNO",
+          tier: "Gold",
+          icon: "assets/badge/uno3.png",
+          desc: "Dominate the table with perfect card combos.",
+        },
+        {
+          name: "UNO Legend",
+          game: "UNO",
+          tier: "Platinum",
+          icon: "assets/badge/uno4.png",
+          desc: "A true UNO legend, known for bold plays.",
+        },
+        {
+          name: "Ultimate Trickster",
+          game: "UNO",
+          tier: "Diamond",
+          icon: "assets/badge/uno5.png",
+          desc: "Master of deception. Every opponent is surprised.",
+        },
+        {
+          name: "Grandmaster of UNO",
+          game: "UNO",
+          tier: "Ultimate",
+          icon: "assets/badge/uno6.png",
+          desc: "The ultimate UNO champion. None can surpass you.",
+        },
 
-const grid = document.getElementById("badgeGrid");
-badges.forEach(b => {
-  const card = document.createElement("div");
-  card.className = "badge-card";
-  card.innerHTML = `
+        // Chess
+        {
+          name: "Pawn Starter",
+          game: "Chess",
+          tier: "Bronze",
+          icon: "assets/badge/chess1.png",
+          desc: "Every grandmaster starts from a pawn. Your journey begins.",
+        },
+        {
+          name: "Knight Tactician",
+          game: "Chess",
+          tier: "Silver",
+          icon: "assets/badge/chess2.png",
+          desc: "A knight with cunning tactics and sharp moves.",
+        },
+        {
+          name: "Rook Strategist",
+          game: "Chess",
+          tier: "Gold",
+          icon: "assets/badge/chess3.png",
+          desc: "Master of balance — both defense and offense.",
+        },
+        {
+          name: "Queen’s Gambit",
+          game: "Chess",
+          tier: "Platinum",
+          icon: "assets/badge/chess4.png",
+          desc: "Bold and elegant moves — strike like the queen.",
+        },
+        {
+          name: "King Slayer",
+          game: "Chess",
+          tier: "Diamond",
+          icon: "assets/badge/chess5.png",
+          desc: "The finisher — bringing every game to a brilliant end.",
+        },
+        {
+          name: "Chess Grandmaster",
+          game: "Chess",
+          tier: "Ultimate",
+          icon: "assets/badge/chess6.png",
+          desc: "The highest honor in chess. All respect your play.",
+        },
+
+        // Jenga
+        {
+          name: "Steady Hands",
+          game: "Jenga",
+          tier: "Bronze",
+          icon: "assets/badge/jenga1.png",
+          desc: "Your first block stands strong — patience is key.",
+        },
+        {
+          name: "Block Builder",
+          game: "Jenga",
+          tier: "Silver",
+          icon: "assets/badge/jenga2.png",
+          desc: "Building higher with precision and calm.",
+        },
+        {
+          name: "Tower Architect",
+          game: "Jenga",
+          tier: "Gold",
+          icon: "assets/badge/jenga3.png",
+          desc: "Your structure is unmatched — balance in every move.",
+        },
+        {
+          name: "Balance Master",
+          game: "Jenga",
+          tier: "Platinum",
+          icon: "assets/badge/jenga4.png",
+          desc: "A master of equilibrium — you never fall.",
+        },
+        {
+          name: "Stacking Genius",
+          game: "Jenga",
+          tier: "Diamond",
+          icon: "assets/badge/jenga5.png",
+          desc: "Your genius touch makes towers defy gravity.",
+        },
+        {
+          name: "Jenga Legend",
+          game: "Jenga",
+          tier: "Ultimate",
+          icon: "assets/badge/jenga6.png",
+          desc: "A legend of balance and precision. You reign supreme.",
+        },
+
+        // Mosquito
+        {
+          name: "Quick Reflex",
+          game: "Mosquito",
+          tier: "Bronze",
+          icon: "assets/badge/mosquito1.png",
+          desc: "Your first slap — fast and sharp.",
+        },
+        {
+          name: "Mosquito Hunter",
+          game: "Mosquito",
+          tier: "Silver",
+          icon: "assets/badge/mosquito2.png",
+          desc: "Few escape your hand — a skilled hunter.",
+        },
+        {
+          name: "Slap Expert",
+          game: "Mosquito",
+          tier: "Gold",
+          icon: "assets/badge/mosquito3.png",
+          desc: "You strike with speed and accuracy.",
+        },
+        {
+          name: "Insect Terminator",
+          game: "Mosquito",
+          tier: "Platinum",
+          icon: "assets/badge/mosquito4.png",
+          desc: "The true exterminator — none are safe.",
+        },
+        {
+          name: "Bug Obliterator",
+          game: "Mosquito",
+          tier: "Diamond",
+          icon: "assets/badge/mosquito5.png",
+          desc: "No bug dares to cross your path.",
+        },
+        {
+          name: "Mosquito Slayer",
+          game: "Mosquito",
+          tier: "Ultimate",
+          icon: "assets/badge/mosquito6.png",
+          desc: "The legendary slayer — total dominance.",
+        },
+
+        // Gaple
+        {
+          name: "Tile Rookie",
+          game: "Gaple",
+          tier: "Bronze",
+          icon: "assets/badge/gaple1.png",
+          desc: "Your first victory in Gaple — the game begins.",
+        },
+        {
+          name: "Strategic Player",
+          game: "Gaple",
+          tier: "Silver",
+          icon: "assets/badge/gaple2.png",
+          desc: "You’ve learned the art of placement — every tile counts.",
+        },
+        {
+          name: "Tile Commander",
+          game: "Gaple",
+          tier: "Gold",
+          icon: "assets/badge/gaple3.png",
+          desc: "You control the board with precision and skill.",
+        },
+        {
+          name: "Domino Champion",
+          game: "Gaple",
+          tier: "Platinum",
+          icon: "assets/badge/gaple4.png",
+          desc: "A true champion — reading every move like a book.",
+        },
+        {
+          name: "Tile Tactician",
+          game: "Gaple",
+          tier: "Diamond",
+          icon: "assets/badge/gaple5.png",
+          desc: "A master of domino tactics — few can outsmart you.",
+        },
+        {
+          name: "Gaple Grandmaster",
+          game: "Gaple",
+          tier: "Ultimate",
+          icon: "assets/badge/gaple6.png",
+          desc: "Unmatched dominance — the ultimate legend of Gaple.",
+        },
+      ];
+
+      const grid = document.getElementById("badgeGrid");
+      badges.forEach((b) => {
+        const card = document.createElement("div");
+        card.className = "badge-card";
+        card.innerHTML = `
     <img src="${b.icon}" alt="${b.name}">
     <h3>${b.name}</h3>
     <p><strong>Game:</strong> ${b.game}</p>
-    <p>${b.desc}</p>
+    <p><strong>Tier:</strong> ${b.tier}</p>
+    <p style="margin-top: 1em;">${b.desc}</p>
   `;
-  grid.appendChild(card);
-});
-</script>
+        grid.appendChild(card);
+      });
 
-<script>
-function goBackLeaderboard() {
-  window.location.href = "index.html";
-}
-</script>
-</body>
+      function goBackLeaderboard() {
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
 </html>

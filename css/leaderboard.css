@@ -1,0 +1,166 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #004632, #00805c);
+  color: white;
+  margin: 0;
+  padding: 1em;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 2.5em 3em;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.logo {
+  width: 110px;
+  margin-bottom: 1em;
+}
+
+h1 {
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #d4b47e;
+  margin-bottom: 0.4em;
+}
+
+.search-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+.search-row input {
+  padding: 0.5em 1em;
+  border-radius: 8px;
+  border: 1px solid #ffd700;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  width: 200px;
+}
+
+.search-row button {
+  background: linear-gradient(135deg, #be8406, #e6b34d);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5em 1.5em;
+  font-weight: bold;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.search-row button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #e6b34d, #be8406);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.card-player {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 1em;
+  margin-bottom: 1em;
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.card-player img {
+  width: 100px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.5em;
+}
+
+.badge-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1em;
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th,
+td {
+  padding: 0.8em;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+th {
+  background: rgba(255, 215, 0, 0.8);
+  color: #004632;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+tr.top1 {
+  background: rgba(255, 215, 0, 0.5);
+  font-weight: bold;
+}
+tr.top2 {
+  background: rgba(192, 192, 192, 0.5);
+  font-weight: bold;
+}
+tr.top3 {
+  background: rgba(205, 127, 50, 0.5);
+  font-weight: bold;
+}
+
+.message {
+  text-align: center;
+  margin-top: 1em;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-row input,
+  .search-row button {
+    width: 100%;
+  }
+}

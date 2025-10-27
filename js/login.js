@@ -7,12 +7,12 @@ function login() {
   msg.className = "text-center mt-3";
 
   if (!user || !pass) {
-    msg.textContent = "⚠️ Harap isi username dan password";
+    msg.textContent = "⚠️ Please enter username and password";
     msg.classList.add("text-danger");
     return;
   }
 
-  msg.textContent = "⏳ Memproses...";
+  msg.textContent = "⏳ Processing...";
   msg.classList.add("text-secondary");
 
   fetch(
@@ -24,19 +24,20 @@ function login() {
     .then(res => res.text())
     .then(result => {
       if (result.trim() === "OK") {
-        // ✅ Simpan status login & username
+        // ✅ Simpan status login & waktu login
         localStorage.setItem("isLogin", "true");
         localStorage.setItem("username", user);
+        localStorage.setItem("loginTime", Date.now()); // waktu login saat ini
 
         // ✅ Arahkan ke dashboard
         window.location.href = "index.html";
       } else {
-        msg.textContent = "❌ Username atau Password salah";
+        msg.textContent = "❌ Invalid username or password";
         msg.classList.add("text-danger");
       }
     })
     .catch(() => {
-      msg.textContent = "⚠️ Gagal terhubung ke server";
+      msg.textContent = "⚠️ Failed to connect to server";
       msg.classList.add("text-danger");
     });
 }
