@@ -28,9 +28,6 @@ This project allows participants to log in, play different games, and automatica
 
 ## 📂 Project Structure  
 
-## 📂 Project Structure  
-
-```bash
 AfterLunchGamePoint/
 │
 ├── index.html          # 🏠 Main interface
