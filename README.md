@@ -11,7 +11,7 @@ Admins can log in and record player scores by tapping ID cards using **Web NFC**
 - 📱 **Web NFC Integration** — Easily add points by scanning ID cards (mobile supported).  
 - 🏆 **Leaderboard** — Displays player rankings and total points across all games.  
 - 🎖️ **Badge System** — Each game grants exclusive badges based on player performance tiers.  
-- 🪪 **Badge Gallery** — Public page showcasing all badge designs and descriptions.  
+- 📚 **Badge Gallery** — Public page showcasing all badge designs and descriptions.  
 - 🌐 **Cross-Platform Design** — Responsive layout for both desktop and mobile devices.  
 - 🔁 **Auto Refresh** — Leaderboard refreshes automatically every 2 minutes with countdown timer.
 
