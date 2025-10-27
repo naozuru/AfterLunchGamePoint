@@ -28,14 +28,17 @@ This project allows participants to log in, play different games, and automatica
 
 ## 📂 Project Structure  
 
+## 📂 Project Structure  
+
+```bash
 AfterLunchGamePoint/
 │
-├── index.html # Main interface
-├── login.html # Login page
-├── script.js # Core JavaScript logic
-├── style.css # UI styling
-├── assets/ # Images and icons
-└── appscript.gs # Google Apps Script backend
+├── index.html          # 🏠 Main interface
+├── login.html          # 🔐 Login page
+├── script.js           # ⚙️ Core JavaScript logic
+├── style.css           # 🎨 UI styling
+├── assets/             # 🖼️ Images and icons (badges, logos, etc.)
+└── appscript.gs        # 🧠 Google Apps Script backend
 
 ---
 
