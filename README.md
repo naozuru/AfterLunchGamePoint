@@ -1,17 +1,19 @@
 # 🎮 After Lunch Game Point  
 
-A web-based point tracking system for fun, competitive games played after lunch!  
-This project allows participants to log in, play different games, and automatically record their scores into a connected Google Spreadsheet using Google Apps Script.
+**After Lunch Game Point** is a fun point-tracking web app designed to record and display game scores for office or community activities.  
+Admins can log in and record player scores by tapping ID cards using **Web NFC**, while everyone else can freely view the **Leaderboard** and **Badge Gallery**.
 
 ---
 
 ## 🚀 Features  
 
-- 🔐 **Login System** — Simple local login using `localStorage`.  
-- 🧩 **Game Selection** — Supports multiple games like Uno, Chess, and Uno Balok.  
-- 🏆 **Automatic Scoring** — Points are added and total scores are calculated dynamically.  
-- 📊 **Google Sheet Integration** — All data is stored and updated in real time via Apps Script.  
-- 💬 **Responsive UI** — Works on desktop, Android, and iOS browsers.  
+- 🔐 **Admin Login** — Only admins can access the NFC scan feature to record scores.  
+- 📱 **Web NFC Integration** — Easily add points by scanning ID cards (mobile supported).  
+- 🏆 **Leaderboard** — Displays player rankings and total points across all games.  
+- 🎖️ **Badge System** — Each game grants exclusive badges based on player performance tiers.  
+- 🪪 **Badge Gallery** — Public page showcasing all badge designs and descriptions.  
+- 🌐 **Cross-Platform Design** — Responsive layout for both desktop and mobile devices.  
+- 🔁 **Auto Refresh** — Leaderboard refreshes automatically every 2 minutes with countdown timer.
 
 ---
 
@@ -26,54 +28,41 @@ This project allows participants to log in, play different games, and automatica
 
 ---
 
-## 🔧 How It Works  
+## 🔒 Access Control
 
-1. **Login**  
-   - Users log in via `login.html`.  
-   - Login state is stored in `localStorage`.  
+- 👑 **Admins:**  
+  Can log in, scan NFC cards, and record game points.  
+  Sessions automatically expire after **6 hours** for security.  
 
-2. **Point Submission**  
-   - Players select a game and add points.  
-   - The system sends data to the Google Sheet using `doPost(e)` in Apps Script.  
-
-3. **Scoreboard**  
-   - The total points are displayed on the web interface.  
-   - Updated automatically after each submission.  
+- 👥 **Public Users:**  
+  Can view the **Leaderboard** and **Badge Gallery** without logging in.  
 
 ---
 
-## 🧠 Example Workflow  
+## 🏅 Games & Badges
 
-1. Open the website and log in.  
-2. Choose a game (e.g., Uno, Chess, Uno Balok).  
-3. Add player scores.  
-4. The system updates total points in the linked Google Sheet.  
+Each game features a unique badge progression system based on total points:  
+- **UNO**
+- **Chess**
+- **Jenga**
+- **Mosquito Slap**
+- **Gaple**
 
----
-
-## 🗂️ Google Apps Script Setup  
-
-1. Create a Google Spreadsheet.  
-2. Go to **Extensions → Apps Script**.  
-3. Paste your `appscript.gs` code there.  
-4. Deploy as a **Web App** and set access to “Anyone with the link.”  
-5. Copy the deployment URL and connect it to your frontend JavaScript.  
+Each has **six tiers** of achievements — from beginner to legendary level.
 
 ---
 
-## 💡 Future Improvements  
+## 🧠 How It Works
 
-- Add leaderboard page.  
-- Enable player profiles.  
-- Include game history tracking.  
-- Add admin dashboard for event management.  
+1. Admin logs in with valid credentials.  
+2. Admin scans a player’s ID card using **NFC** on a mobile device.  
+3. The system automatically updates the player’s score in the linked Google Sheet.  
+4. Leaderboard updates automatically every 2 minutes.  
+5. Players can view their ranks and badges anytime.
 
 ---
 
-## 👤 Author  
+## 💡 Author
 
-**Muhammad Rayhan**  
-🕹️ Developer & Designer  
-📍 Indonesia  
-
-GitHub: [naozuru](https://github.com/naozuru)
+Developed by [**naozuru**](https://github.com/naozuru)  
+Created with ❤️ using **HTML**, **JavaScript**, and **Google Apps Script**.
